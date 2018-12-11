@@ -44,9 +44,18 @@ private:
     //
     // Flag showing which post processing is required for the current exported model.
     //
-    enum class PostProcessFlag : unsigned int
+    enum class PostProcessFlag : size_t
     {
         MaxUnPooling = 0,
+    };
+
+    struct PostProcessFlagHash
+    {
+        template <typename T>
+        size_t operator()(T t) const
+        {
+            return static_cast<size_t>(t);
+        }
     };
 
     //
@@ -548,7 +557,7 @@ private:
     //
     // Flag showing which post processing is required for the current exported model.
     //
-    static std::unordered_set<PostProcessFlag> postProcessFlags;
+    static std::unordered_set<PostProcessFlag, PostProcessFlagHash> postProcessFlags;
 
     //
     // Convert NDShape and various std::vector types to TensorShape
@@ -7669,4 +7678,4 @@ std::unordered_map<std::string, size_t> CNTKToONNXHelper::UniqueNodeNameStorage:
 std::unordered_map<std::string, std::string> CNTKToONNXHelper::UniqueNodeNameStorage::uidNodeNameMap;
 std::unordered_set<std::string> CNTKToONNXHelper::UniqueNodeNameStorage::nodeNameSet;
 std::unordered_map<Variable, Variable> CNTKToONNXHelper::UniqueNodeNameStorage::compositeOutputsMap;
-std::unordered_set<CNTKToONNXHelper::PostProcessFlag> CNTKToONNXHelper::postProcessFlags;
+std::unordered_set<CNTKToONNXHelper::PostProcessFlag, CNTKToONNXHelper::PostProcessFlagHash> CNTKToONNXHelper::postProcessFlags;
